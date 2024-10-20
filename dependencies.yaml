@@ -1,0 +1,31 @@
+
+### 3. **Dependencies in Docker/Podman**
+
+To ensure dependencies like the database, webserver, and other services are containerized, use **Docker Compose**. Here's an example of how to set up a `docker-compose.yml` file:
+
+```yaml
+version: '3.8'
+services:
+  app:
+    build: .
+    environment:
+      - API_KEY=${API_KEY}
+      - DATABASE_URL=postgresql://postgres:12345678@db:5432/weather_db
+    volumes:
+      - .:/usr/src/app
+    depends_on:
+      - db
+
+  db:
+    image: postgres:13
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 12345678
+      POSTGRES_DB: weather_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - db-data:/var/lib/postgresql/data
+
+volumes:
+  db-data:
